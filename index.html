@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>КПВ-шный тренажёр Лазания v1.2</title>
+  <title>КПВ-шный тренажёр Лазания v1.5 | Made by Безудержный Хохот [1614978]</title>
   <style>
     body {
       margin: 0;
@@ -18,7 +18,7 @@
       margin: 0 auto;
       width: max-content;
       font-family: Arial, sans-serif;
-      font-size: 12px;
+      font-size: 14px;
       color: #eee;
     }
     #cw-lu-trainer-root, #cw-lu-trainer-root * { box-sizing: border-box; }
@@ -38,9 +38,9 @@
       flex-wrap: wrap;
       gap: 8px;
     }
-    .cw-lu-title { font-weight: bold; font-size: 20px; color: #fff; }
+    .cw-lu-title { font-weight: bold; font-size: 15px; color: #fff; }
     .cw-lu-controls button {
-      font-size: 15px;
+      font-size: 13px;
       padding: 6px 16px;
       cursor: pointer;
       border: 1px solid #666;
@@ -53,33 +53,33 @@
     .cw-lu-controls button:hover:not(:disabled) { background: #666; }
 
     .cw-lu-settings {
-  display: grid;
-  grid-template-columns: 110px 110px 1fr 1fr; /* Первые две колонки узкие, последние две — широкие */
-  gap: 8px 10px;
-  font-size: 14px;
-  padding: 8px 10px;
-  margin-bottom: 12px;
-  background: #2a2a2a;
-  border-radius: 6px;
-  border: 1px solid #3a3a3a;
-}
-.cw-lu-settings label {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  font-weight: bold;
-  color: #ccc;
-}
-.cw-lu-settings input,
-.cw-lu-settings select {
-  font-size: 15px;
-  background: #444;
-  color: #fff;
-  border: 1px solid #666;
-  border-radius: 4px;
-  padding: 4px 6px;
-  width: 100%;
-}
+      display: grid;
+      grid-template-columns: 110px 110px 1fr 1fr;
+      gap: 8px 10px;
+      font-size: 12px;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+      background: #2a2a2a;
+      border-radius: 6px;
+      border: 1px solid #3a3a3a;
+    }
+    .cw-lu-settings label {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-weight: bold;
+      color: #ccc;
+    }
+    .cw-lu-settings input,
+    .cw-lu-settings select {
+      font-size: 12px;
+      background: #444;
+      color: #fff;
+      border: 1px solid #666;
+      border-radius: 4px;
+      padding: 4px 6px;
+      width: 100%;
+    }
 
     .cw-lu-status {
       display: flex;
@@ -167,6 +167,10 @@
     .cw-lu-cell.cw-lu-radius-highlight {
       background-color: rgba(150, 100, 255, 0.45) !important;
     }
+    .cw-lu-cell.cw-lu-blocked {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .cw-lu-n1{color:#00f}
     .cw-lu-n2{color:#008000}
@@ -177,7 +181,6 @@
     .cw-lu-n7{color:#000}
     .cw-lu-n8{color:#808080}
 
-    /* Зелёная рамка для обоих переходов (вход и выход) */
     .cw-lu-exit, .cw-lu-start { box-shadow: 0 0 0 3px #0f0 inset; }
     .cw-lu-base-safe { box-shadow: 0 0 0 3px #0af inset; }
 
@@ -195,7 +198,7 @@
       color: #ccc;
       border-bottom: 1px solid #444;
       padding-bottom: 6px;
-      font-size: 14px;
+      font-size: 13px;
     }
     .cw-lu-sound-row {
       padding: 4px 8px;
@@ -211,6 +214,22 @@
       font-weight: bold;
     }
 
+    .cw-lu-footer {
+      text-align: center !important;
+      margin: 12px auto 0 auto !important;
+      padding: 6px 10px !important;
+      font-size: 13px !important;
+      color: #777 !important;
+      background: transparent !important;
+      border: none !important;
+      line-height: 1.4 !important;
+      width: max-content !important;
+    }
+    .cw-lu-footer span {
+      display: inline-block !important;
+    }
+
+    /* Мобильная адаптация */
     @media (max-width: 700px) {
       .cw-lu-window {
         min-width: unset;
@@ -218,46 +237,35 @@
         padding: 10px;
       }
       .cw-lu-settings {
-    grid-template-columns: 1fr 1fr; /* На мобильных всё пополам */
-  }
+        grid-template-columns: 1fr 1fr;
+      }
       .cw-lu-main {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        width: 100%;
+      }
+      .cw-lu-board {
+        width: 100%;
+        display: grid;
+        justify-content: center;
       }
       .cw-lu-soundbox {
         width: 100%;
         min-width: unset;
-        margin-top: 16px;
+        margin-top: 12px;
       }
       .cw-lu-message {
         text-align: left;
         width: 100%;
         margin-top: 6px;
-        font-size: 12px;
+        font-size: 11px;
       }
       .cw-lu-cell {
-        width: 34px !important;
-        height: 34px !important;
-        line-height: 34px;
-        font-size: 14px;
+        width: 38px !important;
+        height: 38px !important;
+        line-height: 38px;
+        font-size: 15px;
       }
-      .cw-lu-footer {
-  margin-top: 12px;
-  padding: 8px 12px;
-  text-align: center;
-  font-size: 11px;
-  color: #888;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 4px;
-  line-height: 1.5;
-}
-.cw-lu-footer span {
-  display: block;
-}
-.cw-lu-footer span + span {
-  margin-top: 2px;
-}
     }
   </style>
 </head>
@@ -265,7 +273,7 @@
 <div id="cw-lu-trainer-root">
   <div class="cw-lu-window">
     <div class="cw-lu-header">
-      <span class="cw-lu-title">КПВ-шный тренажёр Лазания v1.2</span>
+      <span class="cw-lu-title">КПВ-шный тренажёр Лазания v1.5</span>
       <div class="cw-lu-controls">
         <button id="cw-lu-restart">Новая игра</button>
       </div>
@@ -299,7 +307,7 @@
     <div class="cw-lu-status">
       <span>Опасных клеток: <strong id="lu-bombs" style="color:#e74c3c">12</strong></span>
       <span>Время: <strong id="lu-timer">0</strong>с</span>
-      <span id="lu-message" class="cw-lu-message">ЛКМ/тап — прыгнуть на клетку, ПКМ/долгий тап (0.4с) — поставить мину.</span>
+      <span id="lu-message" class="cw-lu-message">ЛКМ/тап — прыгнуть на клетку, ПКМ/долгий тап (0.5с) — поставить мину.</span>
     </div>
 
     <div class="cw-lu-main">
@@ -318,12 +326,13 @@
         <div class="cw-lu-sound-row" data-sound="hint" style="color:#ff0; font-weight:bold;">[?] Подсказка (!!!)</div>
       </div>
     </div>
-</div>
-<div class="cw-lu-footer">
-  <br><hr><span>Тренажер делал: <strong style="color:#bbb">Безудержный Хохот [1614978]</strong></span>
-  <br><span>Дорабатывала: <strong style="color:#bbb">Высь [1545056]</strong></span>
-</div>
   </div>
+  
+  <div class="cw-lu-footer">
+    <span>Тренажер делал: <strong>Безудержный Хохот [1614978]</strong></span>
+    <br><span>Дорабатывала: <strong>Высь [1545056]</strong></span>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -389,9 +398,7 @@
       lu: settings.lu,
       mines: settings.mines,
       baseSafeCells: settings.baseSafeCells,
-      // Переход назад (вниз) - левый нижний угол (1 столбец, 6 строка)
       startCoord: { r: 5, c: 0 },
-      // Переход вперёд (вверх) - 4 строка, 10 столбец
       exitCoord:  { r: 3, c: 9 },
       cells: [],
       revealedSafeCount: 0,
@@ -404,7 +411,7 @@
     renderBoard();
     updateAllDisplays();
     highlightSound('0');
-    if (msgEl) msgEl.textContent = `ЛКМ/тап — прыгнуть на клетку, ПКМ/долгий тап (0.4с) — поставить мину. ЛУ: ${game.lu} (шанс подсказки: ${getHintChancePercent()}%)`;
+    if (msgEl) msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${game.lu} (шанс подсказки: ${getHintChancePercent()}%)`;
   }
 
   function generateBoard() {
@@ -455,7 +462,6 @@
       { dr:1,dc:-1 }, { dr:1,dc:1 },
     ];
 
-    // Функция для построения гарантированного пути между двумя точками
     const buildPath = (start, end) => {
       let cur = { r: start.r, c: start.c };
       add(cur.r, cur.c);
@@ -477,14 +483,10 @@
       add(end.r, end.c);
     };
 
-    // 1. Соединяем нижний переход (старт) с первым рядом безопасных клеток
     buildPath(game.startCoord, game.baseSafeCells[0]);
-    
-    // 2. Соединяем случайную клетку из первого ряда с верхним переходом (выход)
     const startPt = game.baseSafeCells[Math.floor(Math.random() * game.baseSafeCells.length)];
     buildPath(startPt, game.exitCoord);
 
-    // Явно добавляем все ключевые точки в безопасную зону
     add(game.startCoord.r, game.startCoord.c);
     game.baseSafeCells.forEach(b => add(b.r, b.c));
     add(game.exitCoord.r, game.exitCoord.c);
@@ -514,9 +516,9 @@
 
   function getHintChancePercent() {
     if (!game || game.lu < HINT_LU_REQUIRED) return 0;
-    if (game.lu === 4) return 30;
-    if (game.lu === 5) return 50;
-    if (game.lu >= 6) return 70;
+    if (game.lu === 4) return 20;
+    if (game.lu === 5) return 40;
+    if (game.lu >= 6) return 60;
     return 0;
   }
 
@@ -524,10 +526,36 @@
     return getHintChancePercent() / 100;
   }
 
+  // Проверка: является ли клетка переходом
+  function isTransition(cell) {
+    return (cell.r === game.startCoord.r && cell.c === game.startCoord.c) ||
+           (cell.r === game.exitCoord.r && cell.c === game.exitCoord.c);
+  }
+
+  // Проверка: граничит ли клетка с хотя бы одной открытой клеткой
+  function hasAdjacentRevealed(cell) {
+    // Переходы и базовые безопасные клетки всегда доступны
+    if (isTransition(cell)) return true;
+    if (game.baseSafeCells.some(p => p.r === cell.r && p.c === cell.c)) return true;
+    
+    // Проверяем соседей
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = cell.r + dr;
+        const nc = cell.c + dc;
+        if (nr >= 0 && nr < game.rows && nc >= 0 && nc < game.cols) {
+          if (game.cells[nr][nc].isRevealed) return true;
+        }
+      }
+    }
+    return false;
+  }
+
   function renderBoard() {
     boardEl.innerHTML='';
     const isMobile = window.innerWidth <= 700;
-    const cellSize = isMobile ? 34 : 40;
+    const cellSize = isMobile ? 38 : 40;
     boardEl.style.gridTemplateColumns = `repeat(${game.cols}, ${cellSize}px)`;
 
     game.cells.flat().forEach(cell=>{
@@ -537,15 +565,30 @@
       el.addEventListener('click', (e) => { e.preventDefault(); handleLeftClick(cell); });
       el.addEventListener('contextmenu', (e) => { e.preventDefault(); handleRightClick(cell); });
       
+      // Исправленные touch-обработчики для мобильных
       let touchTimer;
+      let touchMoved = false;
+      
       el.addEventListener('touchstart', (e) => {
+        touchMoved = false;
         touchTimer = setTimeout(() => {
           e.preventDefault();
           handleRightClick(cell);
-        }, 400);
+        }, 500);
       }, {passive: false});
-      el.addEventListener('touchend', () => clearTimeout(touchTimer));
-      el.addEventListener('touchmove', () => clearTimeout(touchTimer));
+      
+      el.addEventListener('touchmove', (e) => {
+        touchMoved = true;
+        clearTimeout(touchTimer);
+      }, {passive: false});
+      
+      el.addEventListener('touchend', (e) => {
+        clearTimeout(touchTimer);
+        if (!touchMoved) {
+          e.preventDefault();
+          handleLeftClick(cell);
+        }
+      }, {passive: false});
 
       el.addEventListener('mouseenter',()=>{if(cell.isRevealed && !cell.hasMine)highlightRadius(cell.r,cell.c,true);});
       el.addEventListener('mouseleave',()=>{if(cell.isRevealed && !cell.hasMine)highlightRadius(cell.r,cell.c,false);});
@@ -554,20 +597,17 @@
       boardEl.appendChild(el);
     });
 
-    // Подсветка гарантированно безопасных клеток первого ряда
     game.baseSafeCells.forEach(p=>{
       if(p.r>=0&&p.r<game.rows&&p.c>=0&&p.c<game.cols){
         game.cells[p.r][p.c].el.classList.add('cw-lu-base-safe');
       }
     });
     
-    // Подсветка нижнего перехода (старт, 1 столбец, 6 строка)
     const start = game.startCoord;
     if(start.r>=0 && start.r<game.rows && start.c>=0 && start.c<game.cols){
       game.cells[start.r][start.c].el.classList.add('cw-lu-start');
     }
 
-    // Подсветка верхнего перехода (выход, 10 столбец, 4 строка)
     const ex = game.exitCoord;
     if(ex.r>=0 && ex.r<game.rows && ex.c>=0 && ex.c<game.cols){
       game.cells[ex.r][ex.c].el.classList.add('cw-lu-exit');
@@ -627,9 +667,26 @@
   function handleLeftClick(cell){
     if(!game || game.gameOver) return;
 
+    // Переходы не открываются и не дают звука
+    if (isTransition(cell)) {
+      if (msgEl) msgEl.textContent = 'Это переход. Кликните по соседним клеткам.';
+      return;
+    }
+
     if(!game.started){
       game.started = true;
       startTimer();
+    }
+
+    // Проверка: есть ли рядом открытая клетка
+    if (!hasAdjacentRevealed(cell)) {
+      if (msgEl) msgEl.textContent = 'Сначала откройте соседнюю клетку!';
+      setTimeout(() => {
+        if (msgEl && game && !game.gameOver) {
+          msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${game.lu}`;
+        }
+      }, 4000);
+      return;
     }
 
     if(cell.isRevealed && !cell.hasMine){
@@ -700,7 +757,8 @@
   }
 
   function checkWin(){
-    const total = game.rows * game.cols;
+    // Исключаем переходы из подсчёта
+    const total = game.rows * game.cols - 2; // минус 2 перехода
     const safe = total - game.mines;
     if(game.revealedSafeCount >= safe){
       highlightSound('0');
@@ -739,7 +797,7 @@
   const updateMessage = () => {
     if(game && !game.gameOver) {
       const currentLu = parseInt(luInput.value, 10) || 0;
-      msgEl.textContent = `ЛКМ/тап — прыгнуть на клетку, ПКМ/долгий тап (0.4с) — поставить мину. ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
+      msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
     }
   };
   
