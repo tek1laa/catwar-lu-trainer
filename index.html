@@ -52,7 +52,7 @@
       --cell-mine-hit: #704f4c;
       --cell-start: #81978a;
       --cell-exit: #8295a2;
-      --cell-hint: #a18b70;
+      --cell-hint: #a86a5f;
       --cell-radius: rgba(189, 179, 178, 0.12);
       --shadow-color: rgba(0, 0, 0, 0.35);
       --gradient-header: linear-gradient(180deg, #514b4a 0%, #403b3a 100%);
@@ -210,6 +210,15 @@
       border: 1px solid var(--border-light);
       border-radius: 6px;
       padding: 16px;
+      box-shadow: 0 2px 7px rgba(72,65,64,0.05);
+    }
+
+      .panel-card1 {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 5px;
+      margin: 7px;
       box-shadow: 0 2px 7px rgba(72,65,64,0.05);
     }
 
@@ -391,8 +400,8 @@
       box-shadow: inset 2px 0 0 var(--accent-color);
     }
 
-    .sound-item.danger { color: #8e6865; }
-    .sound-item.hint { color: #927c61; }
+    .sound-item.danger { color: #8a5a56; }
+    .sound-item.hint { color: #649c77; }
 
     .controls-info {
       font-size: 14px;
@@ -504,6 +513,7 @@
         <div class="board-wrapper">
           <div id="game-board" class="game-board"></div>
         </div>
+        <div class="panel-card1">Для подсказки прыгайте по соседним безопасным клеткам.</div>
       </div>
 
       <!-- Информационные блоки справа -->
@@ -529,7 +539,8 @@
           <div class="controls-info">
             <div><strong>ЛКМ / Тап</strong> — прыжок</div>
             <div><strong>ПКМ / Долгий тап</strong> — мина</div>
-            <div id="hint-lu" style="margin-top: 6px;">ЛУ: 5 (шанс подсказки: 50%)</div>
+            <div id="hint-lu" style="margin-top: 6px;">
+            ЛУ: 5 (шанс подсказки: 20%)</div>
           </div>
         </div>
       </div>
@@ -738,9 +749,9 @@
 
   function getHintChancePercent() {
     if (!game || game.lu < HINT_LU_REQUIRED) return 0;
-    if (game.lu === 4) return 30;
-    if (game.lu === 5) return 50;
-    if (game.lu >= 6) return 70;
+    if (game.lu === 4) return 10;
+    if (game.lu === 5) return 20;
+    if (game.lu >= 6) return 30;
     return 0;
   }
 
@@ -924,7 +935,7 @@
 
     if(cell.hasMine){
       highlightSound('danger');
-      endGame(false, cell, 'Провал: вы оступились на опасной клетке.');
+      endGame(false, cell, 'Упал(а) с большой высоты на локацию «Каменистая тропа».');
       return;
     }
 
@@ -1039,6 +1050,12 @@
   startNewGame();
 
 })();
+
+  [heightInput, luInput, weatherInput, growthInput].forEach(input => {
+    input.addEventListener('change', startNewGame);
+  });
+
+  
 </script>
 </body>
 </html>
