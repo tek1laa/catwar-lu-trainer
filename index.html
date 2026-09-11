@@ -229,44 +229,193 @@
       display: inline-block !important;
     }
 
-    /* Мобильная адаптация */
-    @media (max-width: 700px) {
-      .cw-lu-window {
-        min-width: unset;
-        width: 100%;
-        padding: 10px;
-      }
-      .cw-lu-settings {
-        grid-template-columns: 1fr 1fr;
-      }
-      .cw-lu-main {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-      }
-      .cw-lu-board {
-        width: 100%;
-        display: grid;
-        justify-content: center;
-      }
-      .cw-lu-soundbox {
-        width: 100%;
-        min-width: unset;
-        margin-top: 12px;
-      }
-      .cw-lu-message {
-        text-align: left;
-        width: 100%;
-        margin-top: 6px;
-        font-size: 11px;
-      }
-      .cw-lu-cell {
-        width: 38px !important;
-        height: 38px !important;
-        line-height: 38px;
-        font-size: 15px;
-      }
-    }
+/* Мобильная адаптация для экранов до 700px */
+@media (max-width: 700px) {
+  body {
+    padding: 4px;
+  }
+  
+  .cw-lu-window {
+    min-width: unset;
+    width: 100%;
+    padding: 6px;
+    border-radius: 4px;
+  }
+  
+  .cw-lu-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  
+  .cw-lu-title {
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .cw-lu-controls button {
+    width: 100%;
+    padding: 6px;
+    font-size: 12px;
+  }
+  
+  .cw-lu-settings {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 6px;
+    padding: 5px;
+    margin-bottom: 8px;
+  }
+  
+  .cw-lu-settings label {
+    font-size: 10px;
+    gap: 2px;
+  }
+  
+  .cw-lu-settings input,
+  .cw-lu-settings select {
+    font-size: 10px;
+    padding: 4px 5px;
+  }
+  
+  .cw-lu-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 5px 8px;
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .cw-lu-message {
+    text-align: left;
+    width: 100%;
+    margin-top: 2px;
+    font-size: 9px;
+  }
+  
+  .cw-lu-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .cw-lu-board {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    padding: 2px;
+    gap: 1px;
+  }
+  
+  .cw-lu-cell {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px;
+    font-size: 12px;
+  }
+  
+  .cw-lu-soundbox {
+    width: 100%;
+    min-width: unset;
+    margin-top: 8px;
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+  
+  .cw-lu-sound-title {
+    font-size: 11px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+  }
+  
+  .cw-lu-sound-row {
+    padding: 2px 5px;
+    font-size: 9px;
+  }
+  
+  .cw-lu-footer {
+    font-size: 8px !important;
+    padding: 3px 6px !important;
+  }
+}
+
+/* Для экранов 370px и меньше */
+@media (max-width: 380px) {
+  body {
+    padding: 2px;
+  }
+  
+  .cw-lu-window {
+    padding: 4px;
+  }
+  
+  .cw-lu-title {
+    font-size: 11px;
+  }
+  
+  .cw-lu-controls button {
+    padding: 5px;
+    font-size: 11px;
+  }
+  
+  .cw-lu-settings {
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 4px;
+    padding: 4px;
+  }
+  
+  .cw-lu-settings label {
+    font-size: 9px;
+  }
+  
+  .cw-lu-settings input,
+  .cw-lu-settings select {
+    font-size: 9px;
+    padding: 3px 4px;
+  }
+  
+  .cw-lu-status {
+    padding: 4px 6px;
+    font-size: 9px;
+    gap: 2px;
+  }
+  
+  .cw-lu-message {
+    font-size: 8px;
+  }
+  
+  .cw-lu-board {
+    padding: 1px;
+    gap: 1px;
+  }
+  
+  .cw-lu-cell {
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 28px;
+    font-size: 11px;
+  }
+  
+  .cw-lu-soundbox {
+    padding: 4px 6px;
+    font-size: 9px;
+  }
+  
+  .cw-lu-sound-title {
+    font-size: 10px;
+  }
+  
+  .cw-lu-sound-row {
+    padding: 2px 4px;
+    font-size: 8px;
+  }
+  
+  .cw-lu-footer {
+    font-size: 7px !important;
+    padding: 2px 4px !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -797,7 +946,7 @@
   const updateMessage = () => {
     if(game && !game.gameOver) {
       const currentLu = parseInt(luInput.value, 10) || 0;
-      msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
+      msgEl.textContent = `ЛКМ/тап — прыгнуть ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
     }
   };
   
