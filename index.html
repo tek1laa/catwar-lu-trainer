@@ -3,483 +3,541 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>КПВ-шный тренажёр Лазания v2</title>
+  <title>Тренажёр Лазания [КПВ]</title>
   <style>
+    :root {
+      --bg-primary: #DDD4D3;
+      --bg-secondary: #BDB3B2;
+      --bg-tertiary: #cfc5c4;
+      --bg-panel: #e6dfde;
+      --text-primary: #6B6362;
+      --text-secondary: #6B6362;
+      --text-muted: #807775;
+      --border-color: #9d9493;
+      --border-light: #c2b9b8;
+      --accent-color: #6B6362;
+      --accent-hover: #5a5352;
+      --cell-closed: #b4aaa9;
+      --cell-closed-hover: #a79d9c;
+      --cell-revealed: #eee8e7;
+      --cell-flag: #9b8f8d;
+      --cell-mine: #9a7774;
+      --cell-mine-hit: #7d5e5b;
+      --cell-start: #81978a;
+      --cell-exit: #8295a2;
+      --cell-hint: #9c574b;
+      --cell-radius: rgba(107, 99, 98, 0.12);
+      --shadow-color: rgba(72, 65, 64, 0.14);
+      --gradient-header: linear-gradient(180deg, #756d6c 0%, #6B6362 100%);
+      --transition-speed: 0.18s;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #383332;
+      --bg-secondary: #45403f;
+      --bg-tertiary: #514b4a;
+      --bg-panel: #403b3a;
+      --text-primary: #DDD4D3;
+      --text-secondary: #c8bfbe;
+      --text-muted: #aaa09f;
+      --border-color: #6f6765;
+      --border-light: #5e5755;
+      --accent-color: #BDB3B2;
+      --accent-hover: #cec5c4;
+      --cell-closed: #68605f;
+      --cell-closed-hover: #756d6b;
+      --cell-revealed: #4c4746;
+      --cell-flag: #8d8381;
+      --cell-mine: #8d6764;
+      --cell-mine-hit: #704f4c;
+      --cell-start: #81978a;
+      --cell-exit: #8295a2;
+      --cell-hint: #a18b70;
+      --cell-radius: rgba(189, 179, 178, 0.12);
+      --shadow-color: rgba(0, 0, 0, 0.35);
+      --gradient-header: linear-gradient(180deg, #514b4a 0%, #403b3a 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
-      padding: 10px;
-      background: #111;
-      color: #eee;
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background var(--transition-speed), color var(--transition-speed);
       touch-action: manipulation;
-    }
-    #cw-lu-trainer-root {
-      position: relative;
-      margin: 0 auto;
-      width: max-content;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      color: #eee;
-    }
-    #cw-lu-trainer-root, #cw-lu-trainer-root * { box-sizing: border-box; }
-    .cw-lu-window {
-      background: #222;
-      border: 1px solid #555;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.8);
-      padding: 16px;
-      min-width: 480px;
-    }
-    .cw-lu-header {
+      min-height: 100vh;
+      padding: 32px 20px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .cw-lu-title { font-weight: bold; font-size: 15px; color: #fff; }
-    .cw-lu-controls button {
-      font-size: 13px;
-      padding: 6px 16px;
-      cursor: pointer;
-      border: 1px solid #666;
-      background: #444;
-      color: #eee;
-      border-radius: 4px;
-      transition: background 0.2s;
-      font-weight: bold;
-    }
-    .cw-lu-controls button:hover:not(:disabled) { background: #666; }
-
-    .cw-lu-settings {
-      display: grid;
-      grid-template-columns: 110px 110px 1fr 1fr;
-      gap: 8px 10px;
-      font-size: 12px;
-      padding: 8px 10px;
-      margin-bottom: 12px;
-      background: #2a2a2a;
-      border-radius: 6px;
-      border: 1px solid #3a3a3a;
-    }
-    .cw-lu-settings label {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      font-weight: bold;
-      color: #ccc;
-    }
-    .cw-lu-settings input,
-    .cw-lu-settings select {
-      font-size: 12px;
-      background: #444;
-      color: #fff;
-      border: 1px solid #666;
-      border-radius: 4px;
-      padding: 4px 6px;
-      width: 100%;
-    }
-
-    .cw-lu-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      padding: 8px 12px;
-      background: #333;
-      border-radius: 6px;
-      flex-wrap: wrap;
-      border: 1px solid #444;
-    }
-    .cw-lu-message {
-      text-align: right;
-      font-weight: bold;
-      color: #aaa;
-      flex-grow: 1;
-      line-height: 1.4;
-    }
-
-    .cw-lu-main {
-      display: flex;
-      gap: 16px;
+      justify-content: center;
       align-items: flex-start;
     }
-    .cw-lu-board {
-      display: inline-grid;
-      gap: 2px;
-      background: #444;
-      padding: 4px;
-      border-radius: 6px;
-      border: 1px solid #555;
+
+    #trainer-root {
+      width: 100%;
+      max-width: 1160px;
+      animation: fadeIn 0.25s ease-out;
     }
 
-    .cw-lu-cell {
-      width: 40px !important;
-      height: 40px !important;
-      line-height: 40px;
-      background: #888;
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .trainer-window {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      box-shadow: 0 12px 30px var(--shadow-color);
+      overflow: hidden;
+    }
+
+    .trainer-header {
+      background: var(--gradient-header);
+      padding: 17px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .trainer-title {
+      font-size: 19px;
+      font-weight: 650;
+      color: #f1edec;
+      letter-spacing: 0.2px;
+    }
+
+    .header-controls { display: flex; gap: 10px; align-items: center; }
+
+    .theme-toggle, .btn-new-game {
+      border: 1px solid #918987;
+      border-radius: 5px;
+      padding: 9px 15px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .theme-toggle { background: transparent; color: #eee9e8; }
+    .theme-toggle:hover { background: rgba(255,255,255,0.08); border-color: #aaa2a0; }
+
+    .btn-new-game {
+      background: #e9e4e3;
+      color: #6B6362;
+      border-color: #e9e4e3;
+    }
+
+    .btn-new-game:hover { background: #f3efee; border-color: #f3efee; }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 24px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .status-metrics { display: flex; gap: 22px; align-items: center; white-space: nowrap; }
+
+    .status-item {
+      font-size: 16px;
+      font-weight: 550;
+      color: var(--text-secondary);
+    }
+
+    .status-item strong {
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: background 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .mode-toggle.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
+    }
+
+    .mode-toggle input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent-color);
+      cursor: pointer;
+    }
+
+    .status-message {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-style: normal;
+      text-align: right;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 260px) max-content minmax(220px, 260px);
+      gap: 20px;
+      padding: 20px;
+      justify-content: center; /* Центрируем всю конструкцию на экране */
+    }
+
+    .settings-column, .info-column {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .panel-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 16px;
+      box-shadow: 0 2px 7px rgba(72,65,64,0.05);
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .setting-group:last-child { margin-bottom: 0; }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .setting-input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .setting-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(107,99,98,0.12);
+    }
+
+    .board-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .board-wrapper {
+      background: var(--bg-panel);
+      padding: 6px; /* Уменьшили с 13px до 6px, чтобы убрать лишние поля внутри рамки */
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 3px 10px var(--shadow-color);
+      width: max-content; /* Ширина строго по содержимому (по размеру поля) */
+    }
+
+    .game-board {
+      display: grid; /* Изменили с inline-grid на grid для лучшего контроля */
+      gap: 2px;
+      background: #8d8584;
+      padding: 4px;
+      border-radius: 3px;
+    }
+
+    .cell {
+      width: 46px;
+      height: 50px;
+      background: var(--cell-closed);
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.08);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 20px;
       user-select: none;
-      transition: background-color 0.1s, transform 0.1s;
-      padding: 0;
-      font-size: 16px;
-      border-radius: 3px;
+      transition: background 0.12s ease, box-shadow 0.12s ease;
+      position: relative;
+      box-shadow: none;
     }
-    .cw-lu-cell:active { transform: scale(0.92); }
-    .cw-lu-cell.cw-lu-revealed {
-      background: #e0e0e0;
-      cursor: default;
-      color: #000;
-    }
-    .cw-lu-cell.cw-lu-flag {
-      background: #555;
-      color: #ffa500;
-    }
-    .cw-lu-cell.cw-lu-mine {
-      background: #e74c3c;
-      color: #fff;
-    }
-    .cw-lu-cell.cw-lu-mine-hit {
-      background: #c0392b;
-      transform: scale(1.1);
-      box-shadow: 0 0 10px #f00;
+
+    .cell:hover:not(.revealed) {
+      background: var(--cell-closed-hover);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+      transform: none;
       z-index: 2;
     }
-    .cw-lu-cell.cw-lu-hint-reveal {
-      color: #ff0000;
-      text-shadow: 0 0 4px #fff, 0 0 8px #ff0000;
-      font-weight: 900;
-      font-size: 20px;
-      animation: pulse 0.4s ease-in-out;
+
+    .cell:active:not(.revealed) { transform: none; }
+
+    .cell.revealed {
+      background: var(--cell-revealed);
+      cursor: default;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
     }
-    @keyframes pulse {
+
+    .cell.flag {
+      background: var(--cell-flag);
+      color: white;
+      animation: none;
+    }
+
+    .cell.mine { background: var(--cell-mine); color: white; }
+
+    .cell.mine-hit {
+      background: var(--cell-mine-hit);
+      animation: mineExplode 0.25s ease-out;
+      box-shadow: 0 0 12px var(--cell-mine-hit);
+      z-index: 3;
+    }
+
+    @keyframes mineExplode {
       0% { transform: scale(1); }
-      50% { transform: scale(1.25); }
+      50% { transform: scale(1.06); }
       100% { transform: scale(1); }
     }
-    .cw-lu-cell.cw-lu-radius-highlight {
-      background-color: rgba(150, 100, 255, 0.45) !important;
+
+    .cell.hint-reveal {
+      color: var(--cell-hint);
+      font-size: 25px;
+      font-weight: 800;
+      animation: none;
+      text-shadow: none;
     }
-    .cw-lu-cell.cw-lu-blocked {
-      opacity: 0.6;
-      cursor: not-allowed;
+
+    .cell.radius-highlight { background-color: var(--cell-radius) !important; }
+
+    .cell.start {
+      outline: none;
+      background: #A8B8AD !important;
+      color: #4f5e53;
     }
 
-    .cw-lu-n1{color:#00f}
-    .cw-lu-n2{color:#008000}
-    .cw-lu-n3{color:#f00}
-    .cw-lu-n4{color:#000080}
-    .cw-lu-n5{color:#800000}
-    .cw-lu-n6{color:#008080}
-    .cw-lu-n7{color:#000}
-    .cw-lu-n8{color:#808080}
+    .cell.exit {
+      outline: none;
+      background: #AAB8C0 !important;
+      color: #52616a;
+    }
 
-    .cw-lu-exit, .cw-lu-start { box-shadow: 0 0 0 3px #0f0 inset; }
-    .cw-lu-base-safe { box-shadow: 0 0 0 3px #0af inset; }
+    .cell.base-safe {
+      box-shadow: inset 0 0 0 2px var(--accent-color);
+    }
 
-    .cw-lu-soundbox {
-      background: #2a2a2a;
-      border-radius: 6px;
-      padding: 10px 12px;
+    .n1 { color: #637f98; }
+    .n2 { color: #6f8a77; }
+    .n3 { color: #9b6d69; }
+    .n4 { color: #756f91; }
+    .n5 { color: #9a7a5c; }
+    .n6 { color: #688b87; }
+    .n7 { color: #596166; }
+    .n8 { color: #858d91; }
+
+    .sound-list { display: flex; flex-direction: column; gap: 3px; }
+
+    .sound-item {
+      padding: 6px 8px;
+      border-radius: 3px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .sound-item.active {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 700;
+      box-shadow: inset 2px 0 0 var(--accent-color);
+    }
+
+    .sound-item.danger { color: #8e6865; }
+    .sound-item.hint { color: #927c61; }
+
+    .controls-info {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .controls-info strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 11px;
       font-size: 12px;
-      min-width: 200px;
-      border: 1px solid #444;
-    }
-    .cw-lu-sound-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #ccc;
-      border-bottom: 1px solid #444;
-      padding-bottom: 6px;
-      font-size: 13px;
-    }
-    .cw-lu-sound-row {
-      padding: 4px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-      transition: background 0.2s;
-      cursor: default;
-    }
-    .cw-lu-sound-row + .cw-lu-sound-row { margin-top: 3px; }
-    .cw-lu-sound-active {
-      background: #4a6fa5;
-      color: #fff;
-      font-weight: bold;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      border-top: 1px solid var(--border-light);
     }
 
-    .cw-lu-footer {
-      text-align: center !important;
-      margin: 12px auto 0 auto !important;
-      padding: 6px 10px !important;
-      font-size: 13px !important;
-      color: #777 !important;
-      background: transparent !important;
-      border: none !important;
-      line-height: 1.4 !important;
-      width: max-content !important;
-    }
-    .cw-lu-footer span {
-      display: inline-block !important;
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 300px 1fr 220px; }
+      .cell { width: 42px; height: 46px; }
     }
 
-/* Мобильная адаптация для экранов до 700px */
-@media (max-width: 700px) {
-  body {
-    padding: 4px;
-  }
-  
-  .cw-lu-window {
-    min-width: unset;
-    width: 100%;
-    padding: 6px;
-    border-radius: 4px;
-  }
-  
-  .cw-lu-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-    margin-bottom: 8px;
-  }
-  
-  .cw-lu-title {
-    font-size: 12px;
-    text-align: center;
-  }
-  
-  .cw-lu-controls button {
-    width: 100%;
-    padding: 6px;
-    font-size: 12px;
-  }
-  
-  .cw-lu-settings {
-    grid-template-columns: 1fr 1fr;
-    gap: 4px 6px;
-    padding: 5px;
-    margin-bottom: 8px;
-  }
-  
-  .cw-lu-settings label {
-    font-size: 10px;
-    gap: 2px;
-  }
-  
-  .cw-lu-settings input,
-  .cw-lu-settings select {
-    font-size: 10px;
-    padding: 4px 5px;
-  }
-  
-  .cw-lu-status {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-    padding: 5px 8px;
-    font-size: 10px;
-    margin-bottom: 8px;
-  }
-  
-  .cw-lu-message {
-    text-align: left;
-    width: 100%;
-    margin-top: 2px;
-    font-size: 9px;
-  }
-  
-  .cw-lu-main {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  
-  .cw-lu-board {
-    width: 100%;
-    display: grid;
-    justify-content: center;
-    padding: 2px;
-    gap: 1px;
-  }
-  
-  .cw-lu-cell {
-    width: 30px !important;
-    height: 30px !important;
-    line-height: 30px;
-    font-size: 12px;
-  }
-  
-  .cw-lu-soundbox {
-    width: 100%;
-    min-width: unset;
-    margin-top: 8px;
-    padding: 6px 8px;
-    font-size: 10px;
-  }
-  
-  .cw-lu-sound-title {
-    font-size: 11px;
-    margin-bottom: 4px;
-    padding-bottom: 4px;
-  }
-  
-  .cw-lu-sound-row {
-    padding: 2px 5px;
-    font-size: 9px;
-  }
-  
-  .cw-lu-footer {
-    font-size: 8px !important;
-    padding: 3px 6px !important;
-  }
-}
+    @media (max-width: 992px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .board-column { order: -1; }
+      .cell { width: 36px; height: 40px; font-size: 15px; }
+    }
 
-/* Для экранов 370px и меньше */
-@media (max-width: 380px) {
-  body {
-    padding: 2px;
-  }
-  
-  .cw-lu-window {
-    padding: 4px;
-  }
-  
-  .cw-lu-title {
-    font-size: 11px;
-  }
-  
-  .cw-lu-controls button {
-    padding: 5px;
-    font-size: 11px;
-  }
-  
-  .cw-lu-settings {
-    grid-template-columns: 1fr 1fr;
-    gap: 3px 4px;
-    padding: 4px;
-  }
-  
-  .cw-lu-settings label {
-    font-size: 9px;
-  }
-  
-  .cw-lu-settings input,
-  .cw-lu-settings select {
-    font-size: 9px;
-    padding: 3px 4px;
-  }
-  
-  .cw-lu-status {
-    padding: 4px 6px;
-    font-size: 9px;
-    gap: 2px;
-  }
-  
-  .cw-lu-message {
-    font-size: 8px;
-  }
-  
-  .cw-lu-board {
-    padding: 1px;
-    gap: 1px;
-  }
-  
-  .cw-lu-cell {
-    width: 28px !important;
-    height: 28px !important;
-    line-height: 28px;
-    font-size: 11px;
-  }
-  
-  .cw-lu-soundbox {
-    padding: 4px 6px;
-    font-size: 9px;
-  }
-  
-  .cw-lu-sound-title {
-    font-size: 10px;
-  }
-  
-  .cw-lu-sound-row {
-    padding: 2px 4px;
-    font-size: 8px;
-  }
-  
-  .cw-lu-footer {
-    font-size: 7px !important;
-    padding: 2px 4px !important;
-  }
-}
+    @media (max-width: 415px) {
+      body { padding: 10px 6px; }
+      .cell { width: 27px; height: 32px; font-size: 12px; }
+      .status-bar { flex-direction: column; align-items: flex-start; }
+      .status-message { text-align: left; }
+    }
   </style>
 </head>
 <body>
-<div id="cw-lu-trainer-root">
-  <div class="cw-lu-window">
-    <div class="cw-lu-header">
-      <span class="cw-lu-title">КПВ-шный тренажёр Лазания v2</span>
-      <div class="cw-lu-controls">
-        <button id="cw-lu-restart">Новая игра</button>
+<div id="trainer-root">
+  <div class="trainer-window">
+    <!-- Шапка -->
+    <div class="trainer-header">
+      <span class="trainer-title">ТРЕНАЖЁР ЛАЗАНИЯ [КПВ]</span>
+      <div class="header-controls">
+        <button class="theme-toggle" id="theme-toggle">Тёмная</button>
+        <button class="btn-new-game" id="btn-new-game">Новая игра</button>
       </div>
     </div>
 
-    <div class="cw-lu-settings">
-      <label>Высота
-        <input type="number" id="setting-height" value="1" min="1" max="5">
+    <!-- Верхняя статус-панель -->
+    <div class="status-bar">
+      <div class="status-metrics">
+        <span class="status-item">Опасных: <strong id="lu-bombs">12</strong></span>
+        <span class="status-item">Время: <strong id="lu-timer">0</strong>с</span>
+      </div>
+      
+      <label class="mode-toggle" id="mode-toggle-label">
+        <input type="checkbox" id="flag-mode">
+        <span>Режим флажков (для телефонщиков)</span>
       </label>
-      <label>ЛУ
-        <input type="number" id="setting-lu" value="5" min="0" max="9">
-      </label>
-      <label>Сезон
-        <select id="setting-weather">
-          <option value="-3">Лето (Жарко, –3 клетки)</option>
-          <option value="0" selected>Демисезон (Тепло, база)</option>
-          <option value="5">Зима (Холодно/Гололёд, +5 клеток)</option>
-        </select>
-      </label>
-      <label>Возраст/Рост
-        <select id="setting-growth">
-          <option value="12">45-75% (0-12 лун) — 12 кл.</option>
-          <option value="15">76-85% (12-50 лун) — 15 кл.</option>
-          <option value="18">81-88% (50-100 лун) — 18 кл.</option>
-          <option value="22">89-95% (100-200 лун) — 22 кл.</option>
-          <option value="25">96-100% (200-275 лун) — 25 кл.</option>
-        </select>
-      </label>
+
+      <span class="status-message" id="status-message">Прыгайте по клеткам, избегая опасных</span>
     </div>
 
-    <div class="cw-lu-status">
-      <span>Опасных клеток: <strong id="lu-bombs" style="color:#e74c3c">12</strong></span>
-      <span>Время: <strong id="lu-timer">0</strong>с</span>
-      <span id="lu-message" class="cw-lu-message">ЛКМ/тап — прыгнуть на клетку, ПКМ/долгий тап (0.5с) — поставить мину.</span>
-    </div>
+    <!-- Основной контент -->
+    <div class="app-layout">
+      <!-- Настройки слева -->
+      <div class="settings-column">
+        <div class="panel-card">
+          <div class="panel-title">Параметры</div>
+          
+          <div class="setting-group">
+            <label class="setting-label">Высота</label>
+            <input type="number" class="setting-input" id="setting-height" value="1" min="1" max="5">
+          </div>
 
-    <div class="cw-lu-main">
-      <div id="lu-board" class="cw-lu-board"></div>
-      <div class="cw-lu-soundbox">
-        <div class="cw-lu-sound-title">Звук клетки (шорох)</div>
-        <div class="cw-lu-sound-row cw-lu-sound-active" data-sound="0">[0] Звуков нет (0 мин рядом)</div>
-        <div class="cw-lu-sound-row" data-sound="1">[1] Едва различимый шорох</div>
-        <div class="cw-lu-sound-row" data-sound="2">[2] Тихий шорох</div>
-        <div class="cw-lu-sound-row" data-sound="3">[3] Приглушённый шорох</div>
-        <div class="cw-lu-sound-row" data-sound="4">[4] Громкий шорох</div>
-        <div class="cw-lu-sound-row" data-sound="5">[5] Очень громкий шорох</div>
-        <div class="cw-lu-sound-row" data-sound="6">[6] Очень громкий (громче)</div>
-        <div class="cw-lu-sound-row" data-sound="7">[7] Очень громкий (макс.)</div>
-        <div class="cw-lu-sound-row" data-sound="danger" style="color:#e74c3c; font-weight:bold;">[X] Опасная клетка!</div>
-        <div class="cw-lu-sound-row" data-sound="hint" style="color:#ff0; font-weight:bold;">[?] Подсказка (!!!)</div>
+          <div class="setting-group">
+            <label class="setting-label">ЛУ</label>
+            <input type="number" class="setting-input" id="setting-lu" value="5" min="0" max="9">
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Сезон</label>
+            <select class="setting-input" id="setting-weather">
+              <option value="-3">Лето (Жара; –3 клетки)</option>
+              <option value="0" selected>Демисезон (Тепло)</option>
+              <option value="5">Зима (Холодно; +5 клеток)</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Возраст / Рост</label>
+            <select class="setting-input" id="setting-growth">
+              <option value="12">45-75% (0-12 лун) — 12 кл.</option>
+              <option value="15">76-85% (12-50 лун) — 15 кл.</option>
+              <option value="18">81-88% (50-100 лун) — 18 кл.</option>
+              <option value="22">89-95% (100-200 лун) — 22 кл.</option>
+              <option value="25">96-100% (200-275 лун) — 25 кл.</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Игровое поле по центру -->
+      <div class="board-column">
+        <div class="board-wrapper">
+          <div id="game-board" class="game-board"></div>
+        </div>
+      </div>
+
+      <!-- Информационные блоки справа -->
+      <div class="info-column">
+        <div class="panel-card">
+          <div class="panel-title">Звуки клетки</div>
+          <div class="sound-list">
+            <div class="sound-item active" data-sound="0">[0] Звуков нет</div>
+            <div class="sound-item" data-sound="1">[1] Едва различимый шорох</div>
+            <div class="sound-item" data-sound="2">[2] Тихий шорох</div>
+            <div class="sound-item" data-sound="3">[3] Приглушённый шорох</div>
+            <div class="sound-item" data-sound="4">[4] Громкий шорох</div>
+            <div class="sound-item" data-sound="5">[5] Очень громкий шорох</div>
+            <div class="sound-item" data-sound="6">[6] Очень громкий шорох</div>
+            <div class="sound-item" data-sound="7">[7] Очень громкий шорох</div>
+            <div class="sound-item danger" data-sound="danger">[X] Опасная клетка!</div>
+            <div class="sound-item hint" data-sound="hint">[?] Подсказка (!!!)</div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-title">Управление</div>
+          <div class="controls-info">
+            <div><strong>ЛКМ / Тап</strong> — прыжок</div>
+            <div><strong>ПКМ / Долгий тап</strong> — мина</div>
+            <div id="hint-lu" style="margin-top: 6px;">ЛУ: 5 (шанс подсказки: 50%)</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div class="cw-lu-footer">
-    <span>Тренажер делал: <strong>Безудержный Хохот [1614978]</strong></span>
-    <br><span>Дорабатывала: <strong>Высь [1545056]</strong></span>
+
+    <div class="footer">
+      Высь [1545056]
+    </div>
   </div>
 </div>
 
@@ -488,28 +546,46 @@
   'use strict';
 
   const HINT_LU_REQUIRED = 4;
-  const HINT_DURATION_MS = 800;
+  const HINT_DURATION_MS = 2000;
 
-  const root         = document.getElementById('cw-lu-trainer-root');
-  const boardEl      = root.querySelector('#lu-board');
-  const restartBtn   = root.querySelector('#cw-lu-restart');
-  const minesEl      = root.querySelector('#lu-bombs');
-  const timerEl      = root.querySelector('#lu-timer');
-  const msgEl        = root.querySelector('#lu-message');
-  const heightInput  = root.querySelector('#setting-height');
-  const luInput      = root.querySelector('#setting-lu');
+  const root = document.getElementById('trainer-root');
+  const boardEl = root.querySelector('#game-board');
+  const restartBtn = root.querySelector('#btn-new-game');
+  const themeToggle = root.querySelector('#theme-toggle');
+  const minesEl = root.querySelector('#lu-bombs');
+  const timerEl = root.querySelector('#lu-timer');
+  const msgEl = root.querySelector('#status-message');
+  const heightInput = root.querySelector('#setting-height');
+  const luInput = root.querySelector('#setting-lu');
   const weatherInput = root.querySelector('#setting-weather');
-  const growthInput  = root.querySelector('#setting-growth');
+  const growthInput = root.querySelector('#setting-growth');
+  const flagModeCheckbox = root.querySelector('#flag-mode');
+  const flagModeLabel = root.querySelector('#mode-toggle-label');
+  const hintLuEl = root.querySelector('#hint-lu');
 
   let game = null;
 
+  // Переключение темы
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    themeToggle.textContent = newTheme === 'dark' ? 'Светлая' : 'Тёмная';
+    localStorage.setItem('theme', newTheme);
+  });
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme === 'dark' ? 'Светлая' : 'Тёмная';
+
   function highlightSound(key) {
-    const box = root.querySelector('.cw-lu-soundbox');
+    const box = root.querySelector('.sound-list');
     if (!box) return;
-    box.querySelectorAll('.cw-lu-sound-row').forEach(row => {
-      row.classList.toggle('cw-lu-sound-active', row.dataset.sound === String(key));
+    box.querySelectorAll('.sound-item').forEach(row => {
+      row.classList.toggle('active', row.dataset.sound === String(key));
     });
   }
+
   function updateSoundForValue(val) {
     if (val <= 0) highlightSound('0');
     else if (val >= 7) highlightSound('7');
@@ -518,18 +594,15 @@
 
   function readSettings() {
     let height = parseInt(heightInput.value, 10);
-    let lu     = parseInt(luInput.value, 10);
+    let lu = parseInt(luInput.value, 10);
     if (isNaN(height)) height = 1;
-    if (isNaN(lu))     lu = 0;
+    if (isNaN(lu)) lu = 0;
     height = Math.min(5, Math.max(1, height));
-    lu     = Math.min(9, Math.max(0, lu));
-    heightInput.value = String(height);
-    luInput.value     = String(lu);
+    lu = Math.min(9, Math.max(0, lu));
 
-    const growthBase   = parseInt(growthInput.value, 10) || 12;
+    const growthBase = parseInt(growthInput.value, 10) || 12;
     const weatherBonus = parseInt(weatherInput.value, 10) || 0;
-    const heightBonus = (height - 1) * 2; 
-    
+    const heightBonus = (height - 1) * 2;
     const minesCount = Math.max(5, growthBase + weatherBonus + heightBonus);
     const baseSafeCount = (height === 1) ? 5 : 3;
     const baseSafeCells = Array.from({ length: baseSafeCount }, (_, i) => ({ r: 0, c: i }));
@@ -548,7 +621,7 @@
       mines: settings.mines,
       baseSafeCells: settings.baseSafeCells,
       startCoord: { r: 5, c: 0 },
-      exitCoord:  { r: 3, c: 9 },
+      exitCoord: { r: 3, c: 9 },
       cells: [],
       revealedSafeCount: 0,
       timerId: null,
@@ -560,7 +633,7 @@
     renderBoard();
     updateAllDisplays();
     highlightSound('0');
-    if (msgEl) msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${game.lu} (шанс подсказки: ${getHintChancePercent()}%)`;
+    updateMessage();
   }
 
   function generateBoard() {
@@ -578,7 +651,7 @@
     );
 
     const pathCells = buildSafePath();
-    const safeZone  = new Set(pathCells.map(p => `${p.r},${p.c}`));
+    const safeZone = new Set(pathCells.map(p => `${p.r},${p.c}`));
     safeZone.add(`${game.startCoord.r},${game.startCoord.c}`);
     game.baseSafeCells.forEach(p => safeZone.add(`${p.r},${p.c}`));
     safeZone.add(`${game.exitCoord.r},${game.exitCoord.c}`);
@@ -641,7 +714,7 @@
     add(game.exitCoord.r, game.exitCoord.c);
 
     return Array.from(pathSet).map(key => {
-      const [r, c] = key.split(',').map(Number); 
+      const [r, c] = key.split(',').map(Number);
       return {r, c};
     });
   }
@@ -665,9 +738,9 @@
 
   function getHintChancePercent() {
     if (!game || game.lu < HINT_LU_REQUIRED) return 0;
-    if (game.lu === 4) return 20;
-    if (game.lu === 5) return 40;
-    if (game.lu >= 6) return 60;
+    if (game.lu === 4) return 30;
+    if (game.lu === 5) return 50;
+    if (game.lu >= 6) return 70;
     return 0;
   }
 
@@ -675,19 +748,15 @@
     return getHintChancePercent() / 100;
   }
 
-  // Проверка: является ли клетка переходом
   function isTransition(cell) {
     return (cell.r === game.startCoord.r && cell.c === game.startCoord.c) ||
            (cell.r === game.exitCoord.r && cell.c === game.exitCoord.c);
   }
 
-  // Проверка: граничит ли клетка с хотя бы одной открытой клеткой
   function hasAdjacentRevealed(cell) {
-    // Переходы и базовые безопасные клетки всегда доступны
     if (isTransition(cell)) return true;
     if (game.baseSafeCells.some(p => p.r === cell.r && p.c === cell.c)) return true;
     
-    // Проверяем соседей
     for (let dr = -1; dr <= 1; dr++) {
       for (let dc = -1; dc <= 1; dc++) {
         if (dr === 0 && dc === 0) continue;
@@ -702,19 +771,16 @@
   }
 
   function renderBoard() {
-    boardEl.innerHTML='';
-    const isMobile = window.innerWidth <= 700;
-    const cellSize = isMobile ? 38 : 40;
-    boardEl.style.gridTemplateColumns = `repeat(${game.cols}, ${cellSize}px)`;
+    boardEl.innerHTML = '';
+    boardEl.style.gridTemplateColumns = `repeat(${game.cols}, auto)`;
 
-    game.cells.flat().forEach(cell=>{
-      const el=document.createElement('div');
-      el.className='cw-lu-cell';
+    game.cells.flat().forEach(cell => {
+      const el = document.createElement('div');
+      el.className = 'cell';
       
       el.addEventListener('click', (e) => { e.preventDefault(); handleLeftClick(cell); });
       el.addEventListener('contextmenu', (e) => { e.preventDefault(); handleRightClick(cell); });
       
-      // Исправленные touch-обработчики для мобильных
       let touchTimer;
       let touchMoved = false;
       
@@ -726,7 +792,7 @@
         }, 500);
       }, {passive: false});
       
-      el.addEventListener('touchmove', (e) => {
+      el.addEventListener('touchmove', () => {
         touchMoved = true;
         clearTimeout(touchTimer);
       }, {passive: false});
@@ -735,39 +801,43 @@
         clearTimeout(touchTimer);
         if (!touchMoved) {
           e.preventDefault();
-          handleLeftClick(cell);
+          if (flagModeCheckbox && flagModeCheckbox.checked) {
+            handleRightClick(cell);
+          } else {
+            handleLeftClick(cell);
+          }
         }
       }, {passive: false});
 
-      el.addEventListener('mouseenter',()=>{if(cell.isRevealed && !cell.hasMine)highlightRadius(cell.r,cell.c,true);});
-      el.addEventListener('mouseleave',()=>{if(cell.isRevealed && !cell.hasMine)highlightRadius(cell.r,cell.c,false);});
+      el.addEventListener('mouseenter', () => { if(cell.isRevealed && !cell.hasMine) highlightRadius(cell.r, cell.c, true); });
+      el.addEventListener('mouseleave', () => { if(cell.isRevealed && !cell.hasMine) highlightRadius(cell.r, cell.c, false); });
       
-      cell.el=el;
+      cell.el = el;
       boardEl.appendChild(el);
     });
 
-    game.baseSafeCells.forEach(p=>{
-      if(p.r>=0&&p.r<game.rows&&p.c>=0&&p.c<game.cols){
-        game.cells[p.r][p.c].el.classList.add('cw-lu-base-safe');
+    game.baseSafeCells.forEach(p => {
+      if(p.r>=0 && p.r<game.rows && p.c>=0 && p.c<game.cols){
+        game.cells[p.r][p.c].el.classList.add('base-safe');
       }
     });
     
     const start = game.startCoord;
     if(start.r>=0 && start.r<game.rows && start.c>=0 && start.c<game.cols){
-      game.cells[start.r][start.c].el.classList.add('cw-lu-start');
+      game.cells[start.r][start.c].el.classList.add('start');
     }
 
     const ex = game.exitCoord;
     if(ex.r>=0 && ex.r<game.rows && ex.c>=0 && ex.c<game.cols){
-      game.cells[ex.r][ex.c].el.classList.add('cw-lu-exit');
+      game.cells[ex.r][ex.c].el.classList.add('exit');
     }
   }
 
-  function highlightRadius(r,c,add){
-    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
-      const nr=r+dr,nc=c+dc;
-      if(nr<0||nr>=game.rows||nc<0||nc>=game.cols)continue;
-      game.cells[nr][nc].el.classList.toggle('cw-lu-radius-highlight',add);
+  function highlightRadius(r, c, add){
+    for(let dr=-1; dr<=1; dr++) for(let dc=-1; dc<=1; dc++){
+      const nr = r+dr, nc = c+dc;
+      if(nr<0 || nr>=game.rows || nc<0 || nc>=game.cols) continue;
+      game.cells[nr][nc].el.classList.toggle('radius-highlight', add);
     }
   }
 
@@ -776,12 +846,12 @@
     if(game.lu < HINT_LU_REQUIRED) return;
     if(centerCell.value === 0) return;
 
-    const candidates=[];
-    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
-      if(dr===0&&dc===0)continue;
-      const nr=centerCell.r+dr,nc=centerCell.c+dc;
-      if(nr<0||nr>=game.rows||nc<0||nc>=game.cols)continue;
-      const c=game.cells[nr][nc];
+    const candidates = [];
+    for(let dr=-1; dr<=1; dr++) for(let dc=-1; dc<=1; dc++){
+      if(dr===0 && dc===0) continue;
+      const nr = centerCell.r+dr, nc = centerCell.c+dc;
+      if(nr<0 || nr>=game.rows || nc<0 || nc>=game.cols) continue;
+      const c = game.cells[nr][nc];
       if(c.hasMine && !c.isRevealed && !c.isFlagged){
         candidates.push(c);
       }
@@ -800,14 +870,14 @@
     cell.isAutoHintActive = true;
     const el = cell.el;
     el.textContent = '!';
-    el.classList.add('cw-lu-hint-reveal');
+    el.classList.add('hint-reveal');
     highlightSound('hint');
 
-    setTimeout(()=>{
+    setTimeout(() => {
       if(!game) return;
       cell.isAutoHintActive = false;
       if(!cell.isRevealed && !cell.isFlagged){
-        el.classList.remove('cw-lu-hint-reveal');
+        el.classList.remove('hint-reveal');
         el.textContent = '';
       }
     }, HINT_DURATION_MS);
@@ -816,7 +886,6 @@
   function handleLeftClick(cell){
     if(!game || game.gameOver) return;
 
-    // Переходы не открываются и не дают звука
     if (isTransition(cell)) {
       if (msgEl) msgEl.textContent = 'Это переход. Кликните по соседним клеткам.';
       return;
@@ -827,12 +896,11 @@
       startTimer();
     }
 
-    // Проверка: есть ли рядом открытая клетка
     if (!hasAdjacentRevealed(cell)) {
       if (msgEl) msgEl.textContent = 'Сначала откройте соседнюю клетку!';
       setTimeout(() => {
         if (msgEl && game && !game.gameOver) {
-          msgEl.textContent = `ЛКМ/тап — прыгнуть, ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${game.lu}`;
+          updateMessage();
         }
       }, 4000);
       return;
@@ -848,7 +916,7 @@
 
     if(cell.isFlagged){
       cell.isFlagged = false;
-      cell.el.classList.remove('cw-lu-flag');
+      cell.el.classList.remove('flag');
       cell.el.textContent = '';
     }
 
@@ -863,10 +931,10 @@
     game.revealedSafeCount++;
 
     const el = cell.el;
-    el.classList.add('cw-lu-revealed');
+    el.classList.add('revealed');
     if(cell.value > 0){
       el.textContent = cell.value;
-      el.classList.add('cw-lu-n' + Math.min(cell.value, 8));
+      el.classList.add('n' + Math.min(cell.value, 8));
     } else {
       el.textContent = '';
     }
@@ -880,11 +948,11 @@
     if(!game || game.gameOver || cell.isRevealed) return;
     cell.isFlagged = !cell.isFlagged;
     if(cell.isFlagged){
-      cell.el.textContent = 'X';
-      cell.el.classList.add('cw-lu-flag');
+      cell.el.textContent = '🚩';
+      cell.el.classList.add('flag');
     } else {
       cell.el.textContent = '';
-      cell.el.classList.remove('cw-lu-flag');
+      cell.el.classList.remove('flag');
     }
   }
 
@@ -896,18 +964,17 @@
     
     game.cells.flat().forEach(cell => {
       if(cell.hasMine && !cell.isRevealed){
-        cell.el.textContent = 'X';
-        cell.el.classList.remove('cw-lu-flag');
-        cell.el.classList.add('cw-lu-mine');
+        cell.el.textContent = '💣';
+        cell.el.classList.remove('flag');
+        cell.el.classList.add('mine');
       }
     });
-    if(clickedCell) clickedCell.el.classList.add('cw-lu-mine-hit');
+    if(clickedCell) clickedCell.el.classList.add('mine-hit');
     updateAllDisplays();
   }
 
   function checkWin(){
-    // Исключаем переходы из подсчёта
-    const total = game.rows * game.cols - 2; // минус 2 перехода
+    const total = game.rows * game.cols - 2;
     const safe = total - game.mines;
     if(game.revealedSafeCount >= safe){
       highlightSound('0');
@@ -920,6 +987,7 @@
     game.startTime = Date.now();
     game.timerId = setInterval(updateAllDisplays, 1000);
   }
+  
   function stopTimer(){
     if(game && game.timerId != null){
       clearInterval(game.timerId);
@@ -940,18 +1008,33 @@
     }
   }
 
+  function updateMessage() {
+    if(game && !game.gameOver) {
+      const currentLu = parseInt(luInput.value, 10) || 0;
+      msgEl.textContent = 'Прыгайте по клеткам, избегая опасных';
+      if (hintLuEl) {
+        hintLuEl.textContent = `ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
+      }
+    }
+  }
+
   restartBtn.addEventListener('click', startNewGame);
   boardEl.addEventListener('contextmenu', e => e.preventDefault());
   
-  const updateMessage = () => {
-    if(game && !game.gameOver) {
-      const currentLu = parseInt(luInput.value, 10) || 0;
-      msgEl.textContent = `ЛКМ/тап — прыгнуть ПКМ/долгий тап (0.5с) — поставить мину. ЛУ: ${currentLu} (шанс подсказки: ${getHintChancePercent()}%)`;
-    }
-  };
-  
-  luInput.addEventListener('change', updateMessage);
-  luInput.addEventListener('input', updateMessage);
+  [heightInput, luInput, weatherInput, growthInput].forEach(input => {
+    input.addEventListener('change', startNewGame);
+  });
+
+  if (flagModeCheckbox) {
+    flagModeCheckbox.addEventListener('change', () => {
+      flagModeLabel.classList.toggle('active', flagModeCheckbox.checked);
+      if (msgEl && game && !game.gameOver) {
+        msgEl.textContent = flagModeCheckbox.checked 
+          ? 'Режим флажков включён' 
+          : 'Прыгайте по клеткам, избегая опасных';
+      }
+    });
+  }
 
   startNewGame();
 
